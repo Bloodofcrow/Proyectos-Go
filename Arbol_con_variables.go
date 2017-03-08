@@ -3,8 +3,8 @@ package main
 import(
 	io "fmt"
 	str "strings"
+	conv "strconv"
 )
-
 
 //::::::::::::::::::: Nuevos Tipos de Datos ::::::::::::::
 
@@ -47,9 +47,37 @@ func (pila *Stack) Pop() *Nodo{
 }
 //-------------------------------------------------------
 
-func ResolverPila(pila Pila) int{
-	termino := pila.Pop()
-	return 0
+func ResolverPila(pila *Stack) int{
+	pilaAux := NuevoStack()
+	rsta := 0
+	for i:=0; i<len(pila.nodos); i++{		
+		termino := pila.Pop()
+		aux, err := conv.Atoi(termino.Nombre)
+		if err != nil{
+			switch termino.Nombre{
+				case "+":					
+					rsta = pilaAux.Pop().Valor + pilaAux.Pop().Valor
+					pilaAux.Push(&Nodo{rsta,""})
+				case "-":
+					rsta = pilaAux.Pop().Valor - pilaAux.Pop().Valor
+					pilaAux.Push(&Nodo{rsta,""})
+				case "/":
+					denominador := pilaAux.Pop().Valor
+					if denominador != 0 {
+						rsta = pilaAux.Pop().Valor / denominador						
+					}else{
+						rsta = pilaAux.Pop().Valor / 1
+					}
+					pilaAux.Push(&Nodo{rsta,""})
+				case "*":
+					rsta = pilaAux.Pop().Valor * pilaAux.Pop().Valor
+					pilaAux.Push(&Nodo{rsta,""})
+			}
+		}else{
+			pilaAux.Push(&Nodo{aux,""})
+		}
+	}
+	return rsta
 }
 
 func main(){
@@ -60,7 +88,6 @@ func main(){
 	pila1 := NuevoStack()
 	pila2 := NuevoStack()
 	pila3 := NuevoStack()
-	pilaAux := NuevoStack()
 	array1 := str.Split(arbol1, " ")
 	array2 := str.Split(arbol2, " ")
 	array3 := str.Split(arbol3, " ")
@@ -73,5 +100,17 @@ func main(){
 	for i:=0; i<len(array3); i++{
 		pila3.Push(&Nodo{i,array3[i]})
 	}
+	x := ResolverPila(pila1)
+	y := ResolverPila(pila2)
+	arr := [2] int {x,y}
+
+	for i:=0; i<len(arr); i++{
+		pila3.Pop()
+	}
+	for i:=0; i<len(arr); i++{
+		pila3.Push(&Nodo{arr[i],""})
+	}
+	z := ResolverPila(pila3)
+	io.Println("X=",arr[0]," Y=",arr[1]," Z=",z)
 
 }
