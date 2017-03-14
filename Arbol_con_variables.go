@@ -1,5 +1,5 @@
 /*Autores:
-	Jehison Andres Colón
+	Jehison Andres Rodriguez
 	Juan Pablo Soler
 	Cesar Mauricio Forero
 */
