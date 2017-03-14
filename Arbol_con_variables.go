@@ -1,3 +1,9 @@
+/*Autores:
+	Jehison Andres Colón
+	Juan Pablo Soler
+	Cesar Mauricio Forero
+*/
+
 package main
 
 import(
