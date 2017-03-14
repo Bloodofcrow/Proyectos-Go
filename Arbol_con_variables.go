@@ -103,14 +103,13 @@ func main(){
 	x := ResolverPila(pila1)
 	y := ResolverPila(pila2)
 	arr := [2] int {x,y}
-
-	for i:=0; i<len(arr); i++{
+	for i:=0; i<=len(arr); i++{
 		pila3.Pop()
 	}
 	for i:=0; i<len(arr); i++{
-		pila3.Push(&Nodo{arr[i],""})
+		pila3.Push(&Nodo{i,conv.Itoa(arr[i])})
 	}
-	z := ResolverPila(pila3)
+	z  := ResolverPila(pila3)
 	io.Println("X=",arr[0]," Y=",arr[1]," Z=",z)
 
 }
