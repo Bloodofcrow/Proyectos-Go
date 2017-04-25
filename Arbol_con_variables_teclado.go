@@ -72,11 +72,12 @@ func ResolverPila(pila *Stack) int {
 				rsta = pilaAux.Pop().Valor - pilaAux.Pop().Valor
 				pilaAux.Push(&Nodo{rsta, ""})
 			case "/":
+				numerador := pilaAux.Pop().Valor
 				denominador := pilaAux.Pop().Valor
 				if denominador != 0 {
-					rsta = pilaAux.Pop().Valor / denominador
+					rsta = numerador / denominador
 				} else {
-					rsta = pilaAux.Pop().Valor / 1
+					rsta = numerador / 1
 				}
 				pilaAux.Push(&Nodo{rsta, ""})
 			case "*":
