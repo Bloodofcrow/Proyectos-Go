@@ -12,9 +12,24 @@ import (
 	os "os"
 	conv "strconv"
 	str "strings"
+	reg "regexp"
+)
+
+var(
+	lista Lista
 )
 
 //::::::::::::::::::: Nuevos Tipos de Datos ::::::::::::::
+
+type NodoLista struct {
+	Valor  string
+	Nombre string
+}
+
+type Lista struct {
+	nodos    []*NodoLista
+	contador int
+}
 
 type Nodo struct {
 	Valor  int
@@ -24,6 +39,12 @@ type Nodo struct {
 type Stack struct {
 	nodos    []*Nodo
 	contador int
+}
+
+type Arbol struct {
+	Izquierda  *Arbol
+	Valor string
+	Derecha *Arbol
 }
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -54,6 +75,28 @@ func (pila *Stack) Pop() *Nodo {
 	pila.contador--
 	return pila.nodos[pila.contador]
 }
+
+//-------------------------------------------------------
+
+//------------------Funciones de Lista------------------
+func NuevaLista() *Lista {
+	return &Lista{}
+}
+
+func (pila *Lista) PushLista(nodo *NodoLista) {
+	pila.nodos = append(pila.nodos[:pila.contador], nodo)
+	pila.contador++
+}
+
+func (pila *Lista) PopLista() *NodoLista {
+	if pila.contador == 0 {
+		return nil
+	}
+	pila.contador--
+	return pila.nodos[pila.contador]
+}
+
+//-------------------------------------------------------
 
 //-------------------------------------------------------
 
@@ -91,6 +134,7 @@ func ResolverPila(pila *Stack) int {
 	return rsta
 }
 
+//Función para la lectira de consola.
 func LecturaDesdeConosola() (string, error) {
 	lectura := bu.NewReader(os.Stdin)
 	s, err := lectura.ReadString('\n')
@@ -98,7 +142,70 @@ func LecturaDesdeConosola() (string, error) {
 	return str.TrimSpace(s), err
 }
 
+//Función para comprobar los strings.
+func Comprobar(cadena string) bool {
+
+	reg1, _ := reg.Compile(`\D`) //Valida que tenga algo, aparte de números.
+	reg2, _ := reg.Compile(`\W`) //Valida que no tenga carácteres especiales.
+	reg3, _ := reg.Compile(`\w`) //Valida que tenga números o letras.
+
+	if(reg1.MatchString(cadena) == true){
+
+		if (reg2.MatchString(cadena) == false){
+
+			//Sería un token "Variable".
+			//Método para almacenar el token en la lista.
+			lista.PushLista(&NodoLista{cadena, "Variable"})
+			io.Print("Variable")
+			return true
+
+		}else {
+
+			if (reg3.MatchString(cadena) == false){
+
+				//Sólo tiene carácteres especiales.
+				//Método para almacenar el token en la lista.
+				lista.PushLista(&NodoLista{cadena, "Operador"})
+				io.Print("Operador")
+				return true
+
+			}
+
+		}
+
+	}else if (reg3.MatchString(cadena) == true){
+
+		//Método para almacenar el token en la lista.
+		//Es una constante.
+		lista.PushLista(&NodoLista{cadena, "Constante"})
+		io.Print("Constante")
+		return true
+
+	}
+
+	return false
+
+}
+
+//Función que creará el árbol a partir de la lista de tokens.
+//func CrearArbol(lista *Lista) *Arbol {
+
+	//Método para crear el árbol de expresiones.
+
+
+//}
+
+//Función para inicializar la pila que será la lista de tokens.
+//func InicializarPila(){
+
+	//lista := NuevaLista	()
+
+//}
+
 func main() {
+
+	//InicializarPila()
+	comprobado := true
 
 	io.Print("Ingrese la expresion (Arbol 1) en postfijo: ")
 	arbol1String, err := LecturaDesdeConosola()
@@ -117,14 +224,50 @@ func main() {
 	array2 := str.Split(arbol2String, " ")
 	array3 := str.Split(arbol3String, " ")
 
+	//Creación de las pilas para su posterior evaluación.
 	for i := 0; i < len(array1); i++ {
-		pila1.Push(&Nodo{i, array1[i]})
+		if Comprobar(array1[i]) == true{
+			pila1.Push(&Nodo{i, array1[i]})
+		} else{
+			comprobado = false
+		}
 	}
+
+	io.Print(lista)
+	//lista1 := lista
+	//InicializarPila()
+	//arbol1 := CrearArbol(lista1)
+
 	for i := 0; i < len(array2); i++ {
-		pila2.Push(&Nodo{i, array2[i]})
+		if Comprobar(array2[i]) == true{
+			pila1.Push(&Nodo{i, array2[i]})
+		} else{
+			comprobado = false
+		}
 	}
+
+	io.Print(lista)
+	//lista2 := lista
+	//InicializarPila()
+	//CrearArbol(lista2)
+
 	for i := 0; i < len(array3); i++ {
-		pila3.Push(&Nodo{i, array3[i]})
+		if Comprobar(array3[i]) == true{
+			pila1.Push(&Nodo{i, array3[i]})
+		} else{
+			comprobado = false
+		}
+	}
+
+	io.Print(lista)
+	//lista3 := lista
+	//InicializarPila()
+	//terCrearArbol(lista3)
+
+	//-----------------
+
+	if comprobado == false{
+		return
 	}
 
 	x := ResolverPila(pila1)
